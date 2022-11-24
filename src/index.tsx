@@ -1,19 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import { RecoilRoot } from 'recoil';
+import { ThemeProvider } from 'styled-components';
+import { darkTheme } from './theme';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+// *************
+// react-beautiful-dnd 라이브러리의 문제로 인해 StricMode 제거
+// 에러 문구 -> Unable to find draggable with id
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <RecoilRoot>
+        <ThemeProvider theme={darkTheme}>
+            <App />
+        </ThemeProvider>
+    </RecoilRoot>,
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
