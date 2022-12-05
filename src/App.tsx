@@ -1,14 +1,13 @@
 import { GlobalStyle } from './StyledReset';
-import { DragDropContext, Droppable, DropResult, DragStart } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { toDoState } from './atoms';
-import DragbbleCard from './Components/DragabbleCard';
-import { useState } from 'react';
+import Board from './Components/Board';
 
 const Wrapper = styled.div`
     display: flex;
-    max-width: 480px;
+    max-width: 800px;
     width: 100%;
     margin: 0 auto;
     justify-content: center;
@@ -18,16 +17,9 @@ const Wrapper = styled.div`
 
 const Boards = styled.div`
     display: grid;
+    gap: 10px;
     width: 100%;
-    grid-template-columns: repeat(1, 1fr);
-`;
-
-const Board = styled.div`
-    padding: 20px 10px;
-    padding-top: 30px;
-    background-color: ${(props) => props.theme.boardColor};
-    border-radius: 5px;
-    min-height: 200px;
+    grid-template-columns: repeat(3, 1fr);
 `;
 
 function App() {
@@ -35,16 +27,16 @@ function App() {
 
     const onDragEnd = ({ draggableId, destination, source }: DropResult) => {
         if (!destination) return;
-        setToDos((oldToDos) => {
-            const copyToDos = [...oldToDos];
-            // 1) 움직이고 있는 item을 삭제
-            const [removed] = copyToDos.splice(source.index, 1);
-            // 2) 삭제한 item을 도착한 지점에 넣어주기
-            // removed를 기존에는 draggableId 를 사용해서 삭제했는데 빠르게 똑같은 곳을 움직일 시 에러 발생함
-            // 복사 된 배열에서 삭제 된 부분을 찾아서 없애줘야 오류가 안 생기는 것 같음
-            copyToDos.splice(destination?.index, 0, removed);
-            return copyToDos;
-        });
+        // setToDos((oldToDos) => {
+        //     const copyToDos = [...oldToDos];
+        //     // 1) 움직이고 있는 item을 삭제
+        //     const [removed] = copyToDos.splice(source.index, 1);
+        //     // 2) 삭제한 item을 도착한 지점에 넣어주기
+        //     // removed를 기존에는 draggableId 를 사용해서 삭제했는데 빠르게 똑같은 곳을 움직일 시 에러 발생함
+        //     // 복사 된 배열에서 삭제 된 부분을 찾아서 없애줘야 오류가 안 생기는 것 같음
+        //     copyToDos.splice(destination?.index, 0, removed);
+        //     return copyToDos;
+        // });
     };
 
     return (
@@ -53,16 +45,9 @@ function App() {
             <DragDropContext onDragEnd={onDragEnd}>
                 <Wrapper>
                     <Boards>
-                        <Droppable droppableId="one">
-                            {(provided) => (
-                                <Board {...provided.droppableProps} ref={provided.innerRef}>
-                                    {toDos.map((todo, idx) => (
-                                        <DragbbleCard todo={todo} idx={idx} key={todo} />
-                                    ))}
-                                    {provided.placeholder}
-                                </Board>
-                            )}
-                        </Droppable>
+                        {Object.keys(toDos).map((boardId) => (
+                            <Board boardId={boardId} key={boardId} toDos={toDos[boardId]} />
+                        ))}
                     </Boards>
                 </Wrapper>
             </DragDropContext>
