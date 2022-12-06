@@ -8,10 +8,17 @@ interface IBoardProps {
 }
 
 const Wrapper = styled.div`
-    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+    padding: 20px;
     background-color: ${(props) => props.theme.boardColor};
     border-radius: 5px;
-    min-height: 200px;
+`;
+
+const Area = styled.div`
+    flex-grow: 1;
+    background-color: blue;
 `;
 
 const Title = styled.h2`
@@ -27,12 +34,12 @@ function Board({ toDos, boardId }: IBoardProps) {
             <Title>{boardId}</Title>
             <Droppable droppableId={boardId}>
                 {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                    <Area {...provided.droppableProps} ref={provided.innerRef}>
                         {toDos.map((todo, idx) => (
                             <DragbbleCard todo={todo} idx={idx} key={todo} />
                         ))}
                         {provided.placeholder}
-                    </div>
+                    </Area>
                 )}
             </Droppable>
         </Wrapper>
